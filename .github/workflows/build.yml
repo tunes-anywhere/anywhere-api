@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Build
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    types:
+      - ready_for_review
+      - reopened
+    branches:
+      - develop
+      - main
+
+jobs:
+  build-backend:
+    name: Build Backend
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          make build
+
+  # TODO
+  # build-frontend-web:
+  #   name: Build Frontend Web
+  #   runs-on: self-hosted
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  # TODO
+  # build-frontend-mobile:
+  #   name: Build Frontend Mobile
+  #   runs-on: self-hosted
+  #   steps:
+  #     - uses: actions/checkout@v3
