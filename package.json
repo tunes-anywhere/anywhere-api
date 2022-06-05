@@ -1,0 +1,25 @@
+{
+  "name": "anywhere",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:hans-m-song/anywhere.git",
+  "author": "Hans Song <hans.m.song@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "sst": "sst"
+  },
+  "dependencies": {
+    "@serverless-stack/cli": "1.2.15",
+    "@serverless-stack/resources": "1.2.15",
+    "aws-cdk-lib": "2.24.0",
+    "typescript": "^4.6.3"
+  },
+  "devDependencies": {
+    "@tsconfig/node14": "^1.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
+    "eslint": "^8.12.0",
+    "eslint-config-serverless-stack": "^0.69.7",
+    "eslint-plugin-import": "^2.26.0"
+  }
+}

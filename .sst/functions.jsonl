@@ -1,0 +1,2 @@
+{"id":"local-anywhere-BackendStack-Lambda_GET_-api-tracks","handler":"handler/list_tracks/main.go","runtime":"go1.x","srcPath":".","root":"/Users/hans.song@flightcentre.com/Workspace/anywhere"}
+{"id":"local-anywhere-BackendStack-Lambda_GET_-api-tracks-{id}","handler":"handler/get_track/main.go","runtime":"go1.x","srcPath":".","root":"/Users/hans.song@flightcentre.com/Workspace/anywhere"}
