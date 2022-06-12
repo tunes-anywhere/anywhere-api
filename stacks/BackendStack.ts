@@ -1,49 +1,79 @@
 import * as sst from "@serverless-stack/resources";
+import { aws_certificatemanager, RemovalPolicy } from "aws-cdk-lib";
+import { config } from "./config";
 
-export class BackendStack extends sst.Stack {
-  bucket = new sst.Bucket(this, "Bucket");
+export const BackendStack = ({ stack, app }: sst.StackContext) => {
+  const domainName = `anywhere-${stack.stage}.${config.awsDomainName}`;
+  const autoDeleteObjects = app.local;
+  const removalPolicy = app.local
+    ? RemovalPolicy.DESTROY
+    : RemovalPolicy.RETAIN;
 
-  table = new sst.Table(this, "Table", {
-    fields: { pk: "string", sk: "string" },
-    primaryIndex: { partitionKey: "pk", sortKey: "sk" },
+  console.log(stack.stackName, {
+    domainName,
+    autoDeleteObjects,
+    removalPolicy,
   });
 
-  api = new sst.Api(this, "Api");
+  const bucket = new sst.Bucket(stack, "Bucket", {
+    cdk: { bucket: { removalPolicy, autoDeleteObjects } },
+    notifications: {
+      // TODO notify ws/webhooks with changes
+    },
+  });
+
+  stack.addDefaultFunctionEnv({ BUCKET_NAME: bucket.bucketName });
+  stack.addDefaultFunctionPermissions([bucket]);
+
+  const table = new sst.Table(stack, "Table", {
+    fields: { pk: "string", sk: "string" },
+    primaryIndex: { partitionKey: "pk", sortKey: "sk" },
+    cdk: { table: { removalPolicy } },
+    consumers: {
+      // TODO download song and upload to bucket?
+      // downloader: "handler/download_track/main.go",
+      // TODO deletes orphaned songs
+      // deleter: "handler/delete_track/main.go",
+    },
+  });
 
   // TODO real-time discovery/sync
-  // sync = new sst.WebSocketApi(thisd, "Sync");
+  // const sync = new sst.WebSocketApi(stack, "Sync");
 
-  dlq = new sst.Queue(this, "DLQ");
+  // TODO dlq and error reporting
+  // const dlq = new sst.Queue(stack, "DLQ", {
+  //   // TODO failure notifications?
+  //   // consumer: "handler/notify_failure/main.go"
+  // });
 
-  constructor(scope: sst.App, id: string, props?: sst.StackProps) {
-    super(scope, id, props);
+  // const hostedZone = aws_route53.HostedZone.fromHostedZoneAttributes(
+  //   stack,
+  //   "HostedZone",
+  //   { hostedZoneId: config.awsHostedZoneId, zoneName: config.awsSubdomainName }
+  // );
 
-    scope.addDefaultFunctionEnv({
-      BUCKET_NAME: this.bucket.bucketName,
-    });
+  const certificate = aws_certificatemanager.Certificate.fromCertificateArn(
+    stack,
+    "Certificate",
+    config.awsAcmCertificateArn
+  );
 
-    scope.addDefaultFunctionPermissions([this.bucket]);
-
-    this.api.addRoutes(this, {
+  const api = new sst.Api(stack, "Api", {
+    customDomain: { domainName, cdk: { certificate } },
+    // TODO ApiKeyAuthorizer
+    routes: {
       "GET /api/tracks": "handler/list_tracks/main.go",
       "GET /api/tracks/{id}": "handler/get_track/main.go",
       // TODO downloads song metadata for prefill?
       // "GET /api/metadata/{id}": "handler/download_track_metadata/main.go"
-    });
+    },
+  });
 
-    this.table.addConsumers(this, {
-      // download song and upload to bucket?
-      // downloader: "handler/download_track/main.go"
-      // deletes orphaned songs
-      // deleter: "handler/delete_track/main.go"
-    });
+  stack.addOutputs({
+    BucketName: bucket.bucketName,
+    ApiUrl: api.url,
+    DomainName: domainName,
+  });
 
-    // TODO failure notifications?
-    // this.dlq.addConsumer(this, "handler/notify_failure/main.go")
-
-    this.addOutputs({
-      BucketName: this.bucket.bucketName,
-      ApiUrl: this.api.url,
-    });
-  }
-}
+  return { bucket, table, api };
+};

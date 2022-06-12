@@ -4,6 +4,7 @@ import { BackendStack } from "./BackendStack";
 export default function main(app: sst.App) {
   app.setDefaultFunctionProps({
     runtime: "go1.x",
+    srcPath: "backend",
     environment: {
       CGO_ENABLED: "0",
       GOOS: "linux",
@@ -11,5 +12,5 @@ export default function main(app: sst.App) {
     },
   });
 
-  new BackendStack(app, "BackendStack");
+  app.stack(BackendStack);
 }

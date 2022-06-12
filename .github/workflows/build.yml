@@ -15,25 +15,33 @@ on:
       - develop
       - main
 
+env:
+  STAGE: ${{ github.ref == "refs/heads/main" && "prd" || "dev" }}
+
 jobs:
-  build-backend:
-    name: Build Backend
+  check-backend:
+    name: Check Backend
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
       - run: |
           make build
 
-  # TODO
-  # build-frontend-web:
-  #   name: Build Frontend Web
-  #   runs-on: self-hosted
-  #   steps:
-  #     - uses: actions/checkout@v3
+  # TODO build-frontend-web
 
-  # TODO
-  # build-frontend-mobile:
-  #   name: Build Frontend Mobile
-  #   runs-on: self-hosted
-  #   steps:
-  #     - uses: actions/checkout@v3
+  # TODO build-frontend-mobile
+
+  deploy:
+    name: Deploy Backend
+    runs-on: self-hosted
+    needs:
+      - build-backend
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_ECR_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY }}
+      - uses: actions/checkout@v3
+      - run: yarn install
+      # - run: yarn sst deploy --stage ${{ env.STAGE }}
