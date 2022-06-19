@@ -3,6 +3,8 @@ module github.com/tunes-anywhere/anywhere-api
 go 1.18
 
 require (
+	github.com/aws/aws-cdk-go/awscdk v1.160.0-devpreview
+	github.com/aws/aws-cdk-go/awscdk/v2 v2.28.1
 	github.com/aws/aws-lambda-go v1.32.0
 	github.com/aws/aws-sdk-go-v2 v1.16.5
 	github.com/aws/aws-sdk-go-v2/config v1.15.10
@@ -10,12 +12,15 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.11.15
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.6
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.26.11
+	github.com/aws/constructs-go/constructs/v10 v10.1.42
+	github.com/aws/constructs-go/constructs/v3 v3.4.39
+	github.com/aws/jsii-runtime-go v1.61.0
 	github.com/google/uuid v1.3.0
-	github.com/hans-m-song/go-collections v0.0.5
-	github.com/rs/zerolog v1.26.1
+	github.com/rs/zerolog v1.27.0
 )
 
 require (
+	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.2 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.5 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.6 // indirect
@@ -33,6 +38,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.16.7 // indirect
 	github.com/aws/smithy-go v1.11.3 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
-	github.com/stretchr/testify v1.7.1 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	github.com/mattn/go-colorable v0.1.12 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
+	golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6 // indirect
 )
