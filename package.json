@@ -2,7 +2,7 @@
   "name": "anywhere",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:hans-m-song/anywhere.git",
+  "repository": "git@github.com:tunes-anywhere/anywhere-api.git",
   "author": "Hans Song <hans.m.song@gmail.com>",
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@serverless-stack/cli": "1.2.20",
-    "@serverless-stack/resources": "1.2.20",
+    "@serverless-stack/resources": "1.2.26",
     "aws-cdk-lib": "2.24.0",
     "typescript": "^4.6.3"
   },
