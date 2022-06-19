@@ -6,39 +6,37 @@ on:
   push:
     branches:
       - develop
-      - main
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-
-env:
-  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+      - master
 
 jobs:
   check-backend:
     name: Check Backend
-    runs-on: self-hosted
+
+    runs-on:
+      - self-hosted
 
     steps:
       - uses: actions/checkout@v3
       - run: make build
-        working-directory: backend
 
   deploy:
     name: Deploy Backend
-    runs-on: self-hosted
-    if: env.BRANCH_NAME == "develop" || env.BRANCH_NAME == "main"
+
     needs:
       - check-backend
-      - parameters
+
+    if: endsWith( github.ref, 'master' )
+
+    runs-on:
+      - self-hosted
+
     env:
       AWS_HOSTED_ZONE_ID: ${{ secrets.AWS_HOSTED_ZONE_ID }}
       AWS_DOMAIN_NAME: ${{ secrets.AWS_DOMAIN_NAME }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
+
     steps:
-      - run: echo "deploying branch '${{ env.BRANCH_NAME }}' to '${{ needs.parameters.outputs.stage }}'"
+      - run: echo "deploying '${{ github.ref }}' to 'prd'"
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: us-east-1
@@ -46,6 +44,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
       - uses: actions/checkout@v3
       - run: yarn install
-      - run: yarn sst cdk diff --stage ${{ needs.parameters.outputs.stage }}
+      - run: yarn sst cdk diff --stage prd
       # TODO
-      # - run: yarn sst deploy --stage ${{ needs.parameters.outputs.stage }}
+      # - run: yarn sst deploy --stage prd
