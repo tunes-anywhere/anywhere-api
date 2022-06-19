@@ -6,8 +6,8 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/hans-m-song/anywhere/handler"
-	"github.com/hans-m-song/anywhere/pkg/util"
+	"github.com/tunes-anywhere/anywhere-api/handler"
+	"github.com/tunes-anywhere/anywhere-api/pkg/util"
 )
 
 func Handler(ctx context.Context, request events.APIGatewayV2CustomAuthorizerV2Request) (events.APIGatewayV2CustomAuthorizerIAMPolicyResponse, error) {

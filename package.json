@@ -2,7 +2,7 @@
   "name": "anywhere",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:hans-m-song/anywhere.git",
+  "repository": "git@github.com:tunes-anywhere/anywhere-api.git",
   "author": "Hans Song <hans.m.song@gmail.com>",
   "license": "MIT",
   "scripts": {

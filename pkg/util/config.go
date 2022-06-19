@@ -1,7 +1,6 @@
 package util
 
 import (
-	"flag"
 	"os"
 
 	"github.com/rs/zerolog"
@@ -9,29 +8,23 @@ import (
 )
 
 type config struct {
-	Debug  bool
-	DbName string
-	DbUri  string
+	Debug      bool
+	TableName  string
+	BucketName string
+	YTAPIKey   string
 }
 
 var (
-	flagValDebug      = flag.Bool("debug", envBool("DEBUG", false), "enable debug logging")
-	flagValBucketName = flag.String("bucketname", envStr("BUCKET_NAME", ""), "bucket name")
-
 	Config config
 )
 
 func InitConfig() {
-	// flags
-
-	flag.Parse()
-
 	Config = config{
-		Debug:  *flagValDebug,
-		DbName: *flagValBucketName,
+		Debug:      envBool("DEBUG", false),
+		TableName:  envStr("TABLE_NAME", ""),
+		BucketName: envStr("BUCKET_NAME", ""),
+		YTAPIKey:   envStr("YT_API_KEY", ""),
 	}
-
-	// logger
 
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	if Config.Debug {

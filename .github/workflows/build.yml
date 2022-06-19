@@ -9,11 +9,9 @@ on:
       - main
   pull_request:
     types:
-      - ready_for_review
+      - opened
       - reopened
-    branches:
-      - develop
-      - main
+      - synchronize
 
 env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -28,34 +26,10 @@ jobs:
       - run: make build
         working-directory: backend
 
-  # TODO build-frontend-web
-
-  # TODO build-frontend-mobile
-
-  parameters:
-    name: Get Parameters
-    runs-on: self-hosted
-    outputs:
-      stage: ${{ steps.stage.outputs.stage }}
-    steps:
-      - id: stage
-        run: |
-          case ${{ env.BRANCH_NAME }} in
-            "main")
-              echo "::set-output name=stage::prd"
-              ;;
-            "develop")
-              echo "::set-output name=stage::dev"
-              ;;
-            *)
-              echo "branch does not have a matching environment configured"
-              exit 1
-              ;;
-          esac
-
   deploy:
     name: Deploy Backend
     runs-on: self-hosted
+    if: env.BRANCH_NAME == "develop" || env.BRANCH_NAME == "main"
     needs:
       - check-backend
       - parameters
@@ -64,8 +38,7 @@ jobs:
       AWS_DOMAIN_NAME: ${{ secrets.AWS_DOMAIN_NAME }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
     steps:
-      - run: |
-          echo "deploying branch '${{ env.BRANCH_NAME }}' to '${{ needs.parameters.outputs.stage }}'"
+      - run: echo "deploying branch '${{ env.BRANCH_NAME }}' to '${{ needs.parameters.outputs.stage }}'"
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: us-east-1
@@ -74,3 +47,5 @@ jobs:
       - uses: actions/checkout@v3
       - run: yarn install
       - run: yarn sst cdk diff --stage ${{ needs.parameters.outputs.stage }}
+      # TODO
+      # - run: yarn sst deploy --stage ${{ needs.parameters.outputs.stage }}

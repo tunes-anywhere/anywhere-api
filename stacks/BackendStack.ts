@@ -1,5 +1,8 @@
 import * as sst from "@serverless-stack/resources";
-import { aws_certificatemanager, RemovalPolicy } from "aws-cdk-lib";
+import { RemovalPolicy } from "aws-cdk-lib";
+import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
+import { Distribution } from "aws-cdk-lib/aws-cloudfront";
+import { S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { config } from "./config";
 
 export const BackendStack = ({ stack, app }: sst.StackContext) => {
@@ -52,28 +55,36 @@ export const BackendStack = ({ stack, app }: sst.StackContext) => {
   //   { hostedZoneId: config.awsHostedZoneId, zoneName: config.awsSubdomainName }
   // );
 
-  const certificate = aws_certificatemanager.Certificate.fromCertificateArn(
+  const certificate = Certificate.fromCertificateArn(
     stack,
     "Certificate",
     config.awsAcmCertificateArn
   );
 
+  const distribution = new Distribution(stack, "Distribution", {
+    defaultBehavior: { origin: new S3Origin(bucket.cdk.bucket) },
+  });
+
   const api = new sst.Api(stack, "Api", {
+    defaults: { function: { permissions: [bucket, table] } },
     customDomain: { domainName, cdk: { certificate } },
     // TODO ApiKeyAuthorizer
     routes: {
       "GET /api/tracks": "handler/list_tracks/main.go",
-      "GET /api/tracks/{id}": "handler/get_track/main.go",
-      // TODO downloads song metadata for prefill?
-      // "GET /api/metadata/{id}": "handler/download_track_metadata/main.go"
+      "POST /api/tracks": "handler/create_track/main.go",
+      // "GET /api/tracks/{id}": "handler/get_track/main.go",
+      // "PATCH /api/tracks/{id}": "handler/update_track/main.go",
+      // TODO artists
+      // TODO albums
     },
   });
 
   stack.addOutputs({
     BucketName: bucket.bucketName,
     ApiUrl: api.url,
+    DistributionUrl: distribution.distributionDomainName,
     DomainName: domainName,
   });
 
-  return { bucket, table, api };
+  return { bucket, table, distribution, api };
 };

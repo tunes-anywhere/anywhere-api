@@ -51,7 +51,7 @@ func (h HTTPResponse) Response() (events.APIGatewayV2HTTPResponse, error) {
 	}
 
 	var err error
-	if h.StatusCode >= 500 {
+	if h.StatusCode >= 400 {
 		err = fmt.Errorf("request failed: %s", h.Message)
 	}
 

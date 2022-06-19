@@ -8,12 +8,10 @@ const assertEnv = (key: string): string => {
   return value;
 };
 
-const awsHostedZoneId = assertEnv("AWS_HOSTED_ZONE_ID");
-const awsDomainName = assertEnv("AWS_DOMAIN_NAME");
-const awsAcmCertificateArn = assertEnv("AWS_ACM_CERTIFICATE_ARN");
-
 export const config = Object.freeze({
-  awsHostedZoneId,
-  awsDomainName,
-  awsAcmCertificateArn,
+  awsHostedZoneId: assertEnv("AWS_HOSTED_ZONE_ID"),
+  awsDomainName: assertEnv("AWS_DOMAIN_NAME"),
+  awsAcmCertificateArn: assertEnv("AWS_ACM_CERTIFICATE_ARN"),
+  ytApiKey: assertEnv("YT_API_KEY"),
+  debug: process.env.DEBUG === "true" ?? false,
 });
