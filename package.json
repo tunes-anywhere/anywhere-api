@@ -11,7 +11,7 @@
   "dependencies": {
     "@serverless-stack/cli": "1.2.26",
     "@serverless-stack/resources": "1.2.26",
-    "aws-cdk-lib": "2.24.0",
+    "aws-cdk-lib": "2.29.0",
     "typescript": "^4.6.3"
   },
   "devDependencies": {
