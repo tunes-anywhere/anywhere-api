@@ -620,6 +620,21 @@ aws-cdk-lib@2.24.0:
     semver "^7.3.7"
     yaml "1.10.2"
 
+aws-cdk-lib@2.32.0:
+  version "2.32.0"
+  resolved "https://registry.yarnpkg.com/aws-cdk-lib/-/aws-cdk-lib-2.32.0.tgz#495abc4c67b518c6ca4c83f1f05fe39f18216ed7"
+  integrity sha512-IItrnjoLWupP3c16m06hN+13h1trGQ+VMqEn/7aPpBd6rRHcPAdR1f/jr/XxkbNxW+AEfrobAniJwMxWBzbh+g==
+  dependencies:
+    "@balena/dockerignore" "^1.0.2"
+    case "1.6.3"
+    fs-extra "^9.1.0"
+    ignore "^5.2.0"
+    jsonschema "^1.4.1"
+    minimatch "^3.1.2"
+    punycode "^2.1.1"
+    semver "^7.3.7"
+    yaml "1.10.2"
+
 aws-cdk@2.24.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/aws-cdk/-/aws-cdk-2.24.0.tgz#e46cc2372b232b4c1b1f52b047b2dea4424f9461"
@@ -2289,7 +2304,7 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-jsonschema@^1.4.0:
+jsonschema@^1.4.0, jsonschema@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/jsonschema/-/jsonschema-1.4.1.tgz#cc4c3f0077fb4542982973d8a083b6b34f482dab"
   integrity sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==
